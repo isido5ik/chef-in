@@ -1,6 +1,8 @@
--- Удаляем таблицы, зависимые от таблицы пользователей
-DROP TABLE IF EXISTS admin;
-DROP TABLE IF EXISTS client;
-
--- Удаляем таблицу пользователей
-DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS t_comments;
+DROP TABLE IF EXISTS t_likes;
+DROP TABLE IF EXISTS t_posts;
+DROP TABLE IF EXISTS t_users_roles;
+DROP TABLE IF EXISTS t_client;
+DROP TABLE IF EXISTS t_admin;
+DROP TABLE IF EXISTS t_roles;
+DROP TABLE IF EXISTS t_users;

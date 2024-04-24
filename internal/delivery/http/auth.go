@@ -15,13 +15,13 @@ func (h *Handler) signUp(c *gin.Context) {
 		return
 	}
 
-	id, err := h.useCases.CreateUser(input)
+	client_id, err := h.useCases.CreateUserAsClient(input)
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
 	c.JSON(http.StatusOK, map[string]interface{}{
-		"id": id,
+		"client_id": client_id,
 	})
 }
 
@@ -33,13 +33,14 @@ func (h *Handler) signIn(c *gin.Context) {
 		return
 	}
 
-	token, err := h.useCases.GenerateToken(input.Username, input.Password)
+	token, rolesHeaders, err := h.useCases.GenerateToken(input.Username, input.Password)
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
 	c.JSON(http.StatusOK, map[string]interface{}{
-		"token": token,
+		"rolesHeaders": rolesHeaders,
+		"token":        token,
 	})
 
 }

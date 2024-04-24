@@ -6,9 +6,9 @@ import (
 )
 
 type Usecase interface {
-	CreateUser(input dtos.User) (int, error)
-	GenerateToken(username, password string) (string, error)
-	ParseToken(token string) (int, error)
+	CreateUserAsClient(input dtos.User) (int, error)
+	GenerateToken(username, password string) (string, []dtos.Roles, error)
+	ParseToken(token string) (int, []dtos.Roles, error)
 }
 
 type usecase struct {
