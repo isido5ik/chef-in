@@ -44,7 +44,7 @@ func (u *usecase) GenerateToken(username, password string) (string, []dtos.Roles
 
 	for _, role := range roles {
 		role_id, err := u.repos.GetRoleId(role, user.UserID)
-		log.Printf("%s role and his id %d", role, role_id)
+		log.Printf("%s role and his id %d (log from generate token method\n)", role, role_id)
 		if err != nil {
 			return "", nil, err
 		}

@@ -39,6 +39,7 @@ func (h *Handler) UserIdentity() gin.HandlerFunc {
 		c.Request.Header.Add(userCtx, strconv.Itoa(userId))
 		for _, role := range roles {
 			c.Request.Header.Add(role.RoleName, strconv.Itoa(role.RoleId))
+			log.Printf("adding the role %s with id %d to header of request", role.RoleName, role.RoleId)
 		}
 
 		c.Next()
@@ -49,6 +50,7 @@ func (h *Handler) UserIdentity() gin.HandlerFunc {
 func (h *Handler) CheckRole(roleName string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		roleValue := c.Request.Header.Get(roleName)
+		log.Printf("role value, key: %s value: %s \n", roleName, roleValue)
 		if roleValue == "" {
 			newErrorResponse(c, http.StatusForbidden, "user doesn't have the required role")
 			return
