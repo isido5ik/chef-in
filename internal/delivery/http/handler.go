@@ -55,6 +55,14 @@ import (
 	"github.com/isido5ik/StoryPublishingPlatform/internal/usecase"
 )
 
+const (
+	authorizationHeader = "Authorization"
+	userCtx             = "userId"
+	adminCtx            = "ADMIN"
+	clientCtx           = "CLIENT"
+	rolesCtx            = "roles"
+)
+
 type Handler struct {
 	useCases usecase.Usecase
 }
@@ -78,14 +86,16 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		{
 			// Middleware
 			userIdentityMiddleware := h.UserIdentity()
-			stories.Use(userIdentityMiddleware)
+			// stories.Use(userIdentityMiddleware)
 
 			// Client routes
 			stories.GET("/", h.getStories)
-			stories.GET("/:story_id", h.getStory)
-			stories.POST("/", h.createStory)
-			stories.PUT("/:story_id", h.updateStory)
-			stories.DELETE("/:story_id", h.deleteStory)
+
+			stories.POST("/", userIdentityMiddleware, h.createStory)
+			stories.GET("/my", userIdentityMiddleware, h.getUsersStories)
+			stories.GET("/:story_id", userIdentityMiddleware, h.getStory)
+			stories.PUT("/:story_id", userIdentityMiddleware, h.updateStory)
+			stories.DELETE("/:story_id", userIdentityMiddleware, h.deleteStory)
 
 			// Admin routes
 		}

@@ -1,6 +1,7 @@
 package http
 
 import (
+	"errors"
 	"log"
 	"net/http"
 	"strconv"
@@ -9,12 +10,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-const (
-	authorizationHeader = "Authorization"
-	userCtx             = "userId"
-	adminCtx            = "ADMIN"
-	clientCtx           = "CLIENT"
-)
 
 func (h *Handler) UserIdentity() gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -36,9 +31,9 @@ func (h *Handler) UserIdentity() gin.HandlerFunc {
 			return
 		}
 
-		c.Request.Header.Add(userCtx, strconv.Itoa(userId))
+		c.Set(userCtx, strconv.Itoa(userId))
 		for _, role := range roles {
-			c.Request.Header.Add(role.RoleName, strconv.Itoa(role.RoleId))
+			c.Set(role.RoleName, strconv.Itoa(role.RoleId))
 			log.Printf("adding the role %s with id %d to header of request", role.RoleName, role.RoleId)
 		}
 
@@ -49,12 +44,43 @@ func (h *Handler) UserIdentity() gin.HandlerFunc {
 
 func (h *Handler) CheckRole(roleName string) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		roleValue := c.Request.Header.Get(roleName)
-		log.Printf("role value, key: %s value: %s \n", roleName, roleValue)
-		if roleValue == "" {
+		roleValue, ok := c.Get(roleName)
+		if !ok {
 			newErrorResponse(c, http.StatusForbidden, "user doesn't have the required role")
 			return
 		}
+		log.Printf("role value, key: %s value: %s \n", roleName, roleValue)
 		c.Next()
 	}
+}
+
+func getUserId(c *gin.Context) (int, error) {
+	id, ok := c.Get(userCtx)
+	if !ok {
+		return 0, errors.New("could not get user id from context")
+	}
+
+	idStr, ok := id.(string)
+	if !ok {
+		return 0, errors.New("invalid user id")
+	}
+
+	idInt, err := strconv.Atoi(idStr)
+	if err != nil {
+		return 0, errors.New("could not convert user id to integer")
+	}
+
+	return idInt, nil
+}
+
+func getRole(c *gin.Context) (string, error) {
+	_, isAdmin := c.Get(adminCtx)
+	if isAdmin {
+		return adminCtx, nil
+	}
+	_, isClient := c.Get(clientCtx)
+	if isClient {
+		return clientCtx, nil
+	}
+	return "", errors.New("you do not have a permission")
 }

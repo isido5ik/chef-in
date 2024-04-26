@@ -10,6 +10,13 @@ type Repository interface {
 	GetUser(username, password string) (dtos.User, error)
 	GetRoles(userId int) ([]string, error)
 	GetRoleId(role string, userId int) (int, error)
+
+	CreateStory(story dtos.Post, userId int) (int, error)
+	GetStories() ([]dtos.Story, error)
+	GetUsersStories(userId int) (string, []dtos.Story, error)
+	GetStory(postId int) (dtos.Story, error)
+	DeleteStory(postId int) error
+	UpdateStory(postId int, input dtos.UpdateStoryInput) error
 }
 
 type repository struct {

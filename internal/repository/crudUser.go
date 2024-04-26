@@ -8,16 +8,6 @@ import (
 )
 
 func (r *repository) CreateUserAsClient(input dtos.User) (int, error) {
-
-	// var user_id int
-	// createUserQuery := fmt.Sprintf("INSERT INTO %s (username, email, password_hash) VALUES ($1, $2, $3) RETURNING user_id", usersTable)
-
-	// row := r.db.QueryRow(createUserQuery, input.Username, input.Email, input.Password)
-	// if err := row.Scan(&user_id); err != nil {
-	// 	return 0, err
-	// }
-	// log.Printf("doing query to sql: %s", createUserQuery)
-	// return user_id, nil
 	tx, err := r.db.Begin()
 	if err != nil {
 		return 0, err
@@ -53,6 +43,7 @@ func (r *repository) CreateUserAsClient(input dtos.User) (int, error) {
 
 func (r *repository) GetUser(username, password string) (dtos.User, error) {
 	var user dtos.User
+	log.Printf("username: %s, \npassword_hash: %s", username, password)
 	getUserQuery := fmt.Sprintf("SELECT * FROM %s WHERE username = $1 AND password_hash = $2", usersTable)
 
 	err := r.db.Get(&user, getUserQuery, username, password)

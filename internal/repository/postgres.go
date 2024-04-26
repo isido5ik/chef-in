@@ -22,7 +22,7 @@ const (
 	clientTable     = "t_client"
 	rolesTable      = "t_roles"
 	usersRolesTable = "t_users_roles"
-	postsTable      = "t_post"
+	postsTable      = "t_posts"
 	commentsTable   = "t_comments"
 	likesTable      = "t_likes"
 )
