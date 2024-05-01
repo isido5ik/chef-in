@@ -22,7 +22,7 @@ func (r *repository) CreateStory(story dtos.Post, userId int) (int, error) {
 
 func (r *repository) GetStories() ([]dtos.Story, error) {
 	var stories []dtos.Story
-	query := fmt.Sprintf("SELECT u.username, p.content, p.created_at FROM %s p JOIN %s u ON p.user_id = u.user_id", postsTable, usersTable) //TODO: add pagination and filtration
+	query := fmt.Sprintf("SELECT u.username, p.content, p.comments, p.likes, p.created_at FROM %s p JOIN %s u ON p.user_id = u.user_id", postsTable, usersTable) //TODO: add pagination and filtration
 	err := r.db.Select(&stories, query)
 	return stories, err
 }
@@ -37,7 +37,7 @@ func (r *repository) GetUsersStories(userId int) (string, []dtos.Story, error) {
 		return "", nil, err
 	}
 
-	getStoriesQuery := fmt.Sprintf("SELECT content, created_at FROM %s WHERE user_id = $1", postsTable)
+	getStoriesQuery := fmt.Sprintf("SELECT content, comments, likes, created_at FROM %s WHERE user_id = $1", postsTable)
 
 	if err := r.db.Select(&stories, getStoriesQuery, userId); err != nil {
 		return "", nil, err
@@ -48,7 +48,7 @@ func (r *repository) GetUsersStories(userId int) (string, []dtos.Story, error) {
 func (r *repository) GetStory(postId int) (dtos.Story, error) {
 	var story dtos.Story
 
-	query := fmt.Sprintf("SELECT p.user_id, u.username, p.content, p.created_at FROM %s p JOIN %s u ON p.user_id = u.user_id WHERE post_id = $1", postsTable, usersTable)
+	query := fmt.Sprintf("SELECT p.user_id, u.username, p.content, p.comments, p.likes, p.created_at FROM %s p JOIN %s u ON p.user_id = u.user_id WHERE post_id = $1", postsTable, usersTable)
 	if err := r.db.Get(&story, query, postId); err != nil {
 		return story, err
 	}

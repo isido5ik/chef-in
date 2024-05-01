@@ -32,6 +32,8 @@ CREATE TABLE t_posts (
     post_id SERIAL PRIMARY KEY,
     user_id INTEGER REFERENCES t_users(user_id) ON DELETE CASCADE,
     content TEXT NOT NULL,
+    comments INTEGER,
+    likes INTEGER,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

@@ -17,6 +17,13 @@ type Repository interface {
 	GetStory(postId int) (dtos.Story, error)
 	DeleteStory(postId int) error
 	UpdateStory(postId int, input dtos.UpdateStoryInput) error
+
+	Like(userId, postId int) error
+	CheckLike(userId, postId int) error
+	RemoveLike(userId, postId int) error
+	AddComment(userId, postId, parentId int, comment string) error
+	CheckComment(userId, postId, commentId int) error
+	UpdateComment(userId, postId, commentId int, newComment dtos.UpdateCommentInput) error
 }
 
 type repository struct {

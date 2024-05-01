@@ -97,7 +97,17 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			stories.PUT("/:story_id", userIdentityMiddleware, h.updateStory)
 			stories.DELETE("/:story_id", userIdentityMiddleware, h.deleteStory)
 
-			// Admin routes
+			like := stories.Group("/:story_id/like", userIdentityMiddleware)
+			{
+				like.PUT("/", h.like)
+				like.DELETE("/", h.removeLike)
+			}
+			comment := stories.Group("/:story_id/comment", userIdentityMiddleware)
+			{
+				comment.POST("/", h.addComment)
+				comment.PUT("/", h.updateComment)
+				comment.DELETE("/", h.deleteComment)
+			}
 		}
 		admin := api.Group("/admin")
 		{

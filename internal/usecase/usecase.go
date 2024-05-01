@@ -16,6 +16,11 @@ type Usecase interface {
 	GetStory(postId int) (dtos.Story, error)
 	DeleteStory(postId, userId int, role string) error
 	UpdateStory(postId, userId int, role string, input dtos.UpdateStoryInput) error
+
+	Like(userId, postId int) error
+	RemoveLike(userId, postId int) error
+	AddComment(userId, postId, parentId int, comment string) error
+	UpdateComment(userId, postId, commentId int, newComment dtos.UpdateCommentInput) error
 }
 
 type usecase struct {
