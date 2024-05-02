@@ -29,3 +29,10 @@ func (u *usecase) UpdateComment(userId, postId, commentId int, newComment dtos.U
 	}
 	return u.repos.UpdateComment(userId, postId, commentId, newComment)
 }
+
+func (u *usecase) DeleteComment(userId, postId, commentId int) error {
+	if err := u.repos.CheckComment(userId, postId, commentId); err != nil {
+		return errors.New("Forbidden")
+	}
+	return u.repos.DeleteComment(userId, postId, commentId)
+}

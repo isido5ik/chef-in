@@ -127,5 +127,27 @@ func (h *Handler) updateComment(c *gin.Context) {
 }
 
 func (h *Handler) deleteComment(c *gin.Context) {
-
+	commentId, err := dtos.GetCommentId(c)
+	if err != nil {
+		newErrorResponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
+	userId, err := getUserId(c)
+	if err != nil {
+		newErrorResponse(c, http.StatusUnauthorized, err.Error())
+		return
+	}
+	postId, err := strconv.Atoi(c.Param("story_id"))
+	if err != nil {
+		newErrorResponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
+	err = h.useCases.DeleteComment(userId, postId, commentId)
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "comment deleted",
+	})
 }

@@ -113,3 +113,26 @@ func (r *repository) UpdateComment(userId, postId, commentId int, newComment dto
 	}
 	return nil
 }
+
+func (r *repository) DeleteComment(userId, postId, commentId int) error {
+	tx, err := r.db.Begin()
+	if err != nil {
+		return err
+	}
+
+	decCommentQuery := fmt.Sprintf("UPDATE %s SET comments = comments - 1 WHERE post_id = $1 AND user_id = $2", postsTable)
+	_, err = r.db.Exec(decCommentQuery, postId, userId)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	deleteCommentQuery := fmt.Sprintf("DELETE FROM %s WHERE user_id = $1 AND post_id = $2 AND comment_id = $3", commentsTable)
+	_, err = r.db.Exec(deleteCommentQuery, userId, postId, commentId)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	return tx.Commit()
+}

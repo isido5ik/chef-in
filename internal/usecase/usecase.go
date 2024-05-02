@@ -21,6 +21,7 @@ type Usecase interface {
 	RemoveLike(userId, postId int) error
 	AddComment(userId, postId, parentId int, comment string) error
 	UpdateComment(userId, postId, commentId int, newComment dtos.UpdateCommentInput) error
+	DeleteComment(userId, postId, commentId int) error
 }
 
 type usecase struct {

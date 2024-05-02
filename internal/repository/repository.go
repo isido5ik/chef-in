@@ -24,6 +24,7 @@ type Repository interface {
 	AddComment(userId, postId, parentId int, comment string) error
 	CheckComment(userId, postId, commentId int) error
 	UpdateComment(userId, postId, commentId int, newComment dtos.UpdateCommentInput) error
+	DeleteComment(userId, postId, commentId int) error
 }
 
 type repository struct {
