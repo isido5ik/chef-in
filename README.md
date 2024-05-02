@@ -49,4 +49,4 @@ go run main.go
 Contributions are welcome! If you have any ideas, suggestions, or improvements, feel free to open an issue or create a pull request.
 
 ## Contact
-For any inquiries or support, please contact do5ymzh4n@example.com.
+For any inquiries or support, please contact do5ymzh4n@gmail.com.
