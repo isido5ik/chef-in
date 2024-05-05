@@ -3,23 +3,15 @@ package usecase
 import (
 	"errors"
 
-	"github.com/isido5ik/StoryPublishingPlatform/dtos"
+	"github.com/isido5ik/RecipePublishingPlatform/dtos"
 )
-
-func (u *usecase) Like(userId, postId int) error {
-	return u.repos.Like(userId, postId)
-}
-
-func (u *usecase) RemoveLike(userId, postId int) error {
-	err := u.repos.CheckLike(userId, postId)
-	if err != nil {
-		return errors.New("Forbidden")
-	}
-	return u.repos.RemoveLike(userId, postId)
-}
 
 func (u *usecase) AddComment(userId, postId, parentId int, comment string) error {
 	return u.repos.AddComment(userId, postId, parentId, comment)
+}
+
+func (u *usecase) GetAllComments(postId int) ([]dtos.Comment, error) {
+	return u.repos.GetAllComments(postId)
 }
 
 func (u *usecase) UpdateComment(userId, postId, commentId int, newComment dtos.UpdateCommentInput) error {

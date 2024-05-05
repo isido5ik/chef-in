@@ -1,0 +1,595 @@
+basePath: /
+definitions:
+  dtos.Comment:
+    properties:
+      comment_id:
+        type: integer
+      comment_text:
+        type: string
+      created_at:
+        type: string
+      parent_id:
+        type: integer
+      post_id:
+        type: integer
+      user_id:
+        type: integer
+    required:
+    - comment_text
+    type: object
+  dtos.CreateRecipeInput:
+    properties:
+      content:
+        type: string
+    type: object
+  dtos.NewComment:
+    properties:
+      comment_text:
+        type: string
+    type: object
+  dtos.Recipe:
+    properties:
+      author:
+        type: string
+      comments:
+        type: integer
+      content:
+        type: string
+      created_at:
+        type: string
+    type: object
+  dtos.SignInInput:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  dtos.SignUpInput:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - email
+    - password
+    - username
+    type: object
+  dtos.UpdateCommentInput:
+    properties:
+      comment_text:
+        type: string
+    type: object
+  http.errorResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  http.getAllCommentsResponse:
+    properties:
+      comments:
+        items:
+          $ref: '#/definitions/dtos.Comment'
+        type: array
+    type: object
+  http.getMyRecipesResponse:
+    properties:
+      recipes:
+        items:
+          $ref: '#/definitions/dtos.Recipe'
+        type: array
+      username:
+        type: string
+    type: object
+  http.getRecipesResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/dtos.Recipe'
+        type: array
+    type: object
+host: localhost:8000
+info:
+  contact: {}
+  description: Api Server for NFactorial
+  title: Chef-In
+  version: "1.0"
+paths:
+  /api/auth/sign-in:
+    post:
+      consumes:
+      - application/json
+      description: login
+      operationId: login
+      parameters:
+      - description: credentials
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.SignInInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: token
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/http.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/http.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/http.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/http.errorResponse'
+      summary: SignIn
+      tags:
+      - auth
+  /api/auth/sign-up:
+    post:
+      consumes:
+      - application/json
+      description: create account
+      operationId: create-account
+      parameters:
+      - description: account info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.SignUpInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/http.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/http.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/http.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/http.errorResponse'
+      summary: SignUp
+      tags:
+      - auth
+  /api/recipes:
+    get:
+      consumes:
+      - application/json
+      description: get all recipes
+      operationId: get-all-recipes
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/http.getRecipesResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/http.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/http.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/http.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/http.errorResponse'
+      summary: Get All Recipes
+      tags:
+      - resipes
+    post:
+      consumes:
+      - application/json
+      description: create recipe
+      operationId: create-recipe
+      parameters:
+      - description: recipe info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.CreateRecipeInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/http.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/http.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/http.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/http.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Create Recipe
+      tags:
+      - recipes
+  /api/recipes/{:recipe_id}:
+    delete:
+      consumes:
+      - application/json
+      description: delete recipe by id
+      operationId: delete-recipe-by-id
+      parameters:
+      - description: Post ID
+        in: path
+        name: :recipe_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/http.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/http.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/http.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/http.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete Recipe By Id
+      tags:
+      - recipes
+    get:
+      consumes:
+      - application/json
+      description: get recipe by id
+      operationId: get-recipe-by-id
+      parameters:
+      - description: Идентификатор рецепта
+        in: path
+        name: :recipe_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dtos.Recipe'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/http.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/http.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/http.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/http.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get Recipe By Id
+      tags:
+      - recipes
+    put:
+      consumes:
+      - application/json
+      description: update recipe by id
+      operationId: update-recipe-by-id
+      parameters:
+      - description: Post ID
+        in: path
+        name: :recipe_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/http.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/http.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/http.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/http.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Update Recipe By Id
+      tags:
+      - recipes
+  /api/recipes/{:recipe_id}/comment:
+    delete:
+      consumes:
+      - application/json
+      description: delete comment
+      operationId: delete-comment
+      parameters:
+      - description: Post ID
+        in: path
+        name: :recipe_id
+        required: true
+        type: integer
+      - description: Comment ID
+        in: query
+        name: comment_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/http.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/http.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/http.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/http.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete comment
+      tags:
+      - comments
+    get:
+      consumes:
+      - application/json
+      description: get all comments
+      operationId: get-all-comments
+      parameters:
+      - description: Post ID
+        in: path
+        name: :recipe_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/http.getAllCommentsResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/http.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/http.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/http.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/http.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get all comments
+      tags:
+      - comments
+    post:
+      consumes:
+      - application/json
+      description: add comment to post
+      operationId: add-comment-to-post
+      parameters:
+      - description: Post ID
+        in: path
+        name: :recipe_id
+        required: true
+        type: integer
+      - description: recipe info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.NewComment'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/http.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/http.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/http.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/http.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Add comment to post
+      tags:
+      - comments
+    put:
+      consumes:
+      - application/json
+      description: update comment
+      operationId: update-comment
+      parameters:
+      - description: Post ID
+        in: path
+        name: :recipe_id
+        required: true
+        type: integer
+      - description: Comment ID
+        in: query
+        name: comment_id
+        required: true
+        type: integer
+      - description: comment info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.UpdateCommentInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/http.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/http.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/http.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/http.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Update comment
+      tags:
+      - comments
+  /api/recipes/my:
+    get:
+      consumes:
+      - application/json
+      description: get users recipes
+      operationId: get-my-recipe
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/http.getMyRecipesResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/http.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/http.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/http.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/http.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get My Recipe
+      tags:
+      - recipes
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

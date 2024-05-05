@@ -20,7 +20,6 @@ type Post struct {
 	UserID    int       `json:"user_id" db:"user_id"`
 	Content   string    `json:"content" db:"content" binding:"required"`
 	Comments  int       `json:"comments" db:"comments"`
-	Likes     int       `json:"likes" db:"likes"`
 	CreatedAt time.Time `json:"created_at" db:"created_at"`
 }
 
@@ -33,25 +32,16 @@ type Comment struct {
 	CreatedAt   time.Time `json:"created_at" db:"created_at"`
 }
 
-type Like struct {
-	LikeID    int       `json:"like_id" db:"like_id"`
-	UserID    int       `json:"user_id" db:"user_id"`
-	PostID    int       `json:"post_id" db:"post_id"`
-	CreatedAt time.Time `json:"created_at" db:"created_at"`
-}
-
-type Story struct {
+type Recipe struct {
 	UserId    int       `json:"-" db:"user_id"`
 	Author    string    `json:"author" db:"username"`
 	Content   string    `json:"content" db:"content"`
 	Comments  int       `json:"comments" db:"comments"`
-	Likes     int       `json:"likes" db:"likes"`
 	CreatedAt time.Time `json:"created_at" db:"created_at"`
 }
 
-type MyStory struct {
+type MyRecipe struct {
 	Content   string    `json:"content" db:"content"`
 	Comments  int       `json:"comments" db:"comments"`
-	Likes     int       `json:"likes" db:"likes"`
 	CreatedAt time.Time `json:"created_at" db:"created_at"`
 }

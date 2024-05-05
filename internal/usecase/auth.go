@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt"
-	"github.com/isido5ik/StoryPublishingPlatform/dtos"
+	"github.com/isido5ik/RecipePublishingPlatform/dtos"
 )
 
 const (
@@ -22,7 +22,12 @@ type tokenClaims struct {
 	Roles  []dtos.Roles `json:"roles"`
 }
 
-func (u *usecase) CreateUserAsClient(input dtos.User) (int, error) {
+func (u *usecase) CreateUserAsClient(input dtos.SignUpInput) (int, error) {
+	_, err := u.repos.GetUser(input.Username, generateHashPassword(input.Password))
+	if err == nil {
+		log.Print("user exists")
+		return 0, errors.New("user with this username already exists")
+	}
 	input.Password = generateHashPassword(input.Password)
 	return u.repos.CreateUserAsClient(input)
 }
@@ -30,6 +35,7 @@ func (u *usecase) CreateUserAsClient(input dtos.User) (int, error) {
 func (u *usecase) GenerateToken(username, password string) (string, []dtos.Roles, error) {
 	user, err := u.repos.GetUser(username, generateHashPassword(password))
 	if err != nil {
+		log.Printf("error from GenerateToken -> u.repos.GetUser(username, generateHashPassword(password))")
 		return "", nil, err
 	}
 
@@ -46,6 +52,7 @@ func (u *usecase) GenerateToken(username, password string) (string, []dtos.Roles
 		role_id, err := u.repos.GetRoleId(role, user.UserID)
 		log.Printf("%s role and his id %d (log from generate token method\n)", role, role_id)
 		if err != nil {
+			log.Printf("error from GenerateToken -> u.repos.GetRoleId(role, user.UserID)")
 			return "", nil, err
 		}
 		rolesHeaders = append(rolesHeaders, dtos.Roles{RoleId: role_id, RoleName: role})

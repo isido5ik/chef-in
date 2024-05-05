@@ -5,7 +5,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/isido5ik/StoryPublishingPlatform/internal/repository"
+	"github.com/isido5ik/RecipePublishingPlatform/internal/repository"
 	"github.com/jmoiron/sqlx"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"

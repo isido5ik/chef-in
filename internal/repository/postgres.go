@@ -24,7 +24,6 @@ const (
 	usersRolesTable = "t_users_roles"
 	postsTable      = "t_posts"
 	commentsTable   = "t_comments"
-	likesTable      = "t_likes"
 )
 
 func NewPostgresDB(cfg Config) (*sqlx.DB, error) {
@@ -34,11 +33,13 @@ func NewPostgresDB(cfg Config) (*sqlx.DB, error) {
 	log.Print(source)
 	db, err := sqlx.Open("postgres", source)
 	if err != nil {
+		log.Print("error from NewPostgresDB -> sqlx.Open('postgres', source)")
 		return nil, err
 	}
 
 	err = db.Ping()
 	if err != nil {
+		log.Print("error from NewPostgresDB -> db.Ping()")
 		return nil, err
 	}
 	return db, nil

@@ -1,5 +1,4 @@
 DROP TABLE IF EXISTS t_comments;
-DROP TABLE IF EXISTS t_likes;
 DROP TABLE IF EXISTS t_posts;
 DROP TABLE IF EXISTS t_users_roles;
 DROP TABLE IF EXISTS t_client;
