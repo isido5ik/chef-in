@@ -34,6 +34,9 @@ go mod tidy
 ```bash
 go run main.go
 ```
+## Swagger API Documentation
+
+You can explore our API documentation using Swagger. Click [here](http://localhost:8000/swagger/index.html#/) to access it.
 
 ## Usage
 1. Register a new user account or login with existing credentials.
