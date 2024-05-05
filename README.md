@@ -36,7 +36,9 @@ go run main.go
 ```
 ## Swagger API Documentation
 
-You can explore our API documentation using Swagger. Click [here](http://localhost:8000/swagger/index.html#/) to access it.
+Before exploring our API documentation using Swagger, make sure to first run the application. 
+You can access the Swagger documentation by clicking [here](http://localhost:8000/swagger/index.html#/).
+
 
 ## Usage
 1. Register a new user account or login with existing credentials.
