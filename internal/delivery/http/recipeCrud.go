@@ -137,6 +137,7 @@ func (h *Handler) getRecipe(c *gin.Context) {
 // @Param :recipe_id path int true "Post ID"
 // @Accept  json
 // @Produce  json
+// @Param input body dtos.UpdateRecipeInput true "account info"
 // @Success 200 {object} map[string]interface{}
 // @Failure 400,404 {object} errorResponse
 // @Failure 500 {object} errorResponse
